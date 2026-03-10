@@ -138,7 +138,7 @@ results/
 
 
 Primary results used for reporting:
-```
+
 | File                                     | Description                                     |
 | ---------------------------------------- | ----------------------------------------------- |
 | `rf_cv_summary.csv`                      | Cross-validated performance of baseline models  |
@@ -146,7 +146,6 @@ Primary results used for reporting:
 | `rf_feature_importance_rank_summary.csv` | Average feature importance ranking across folds |
 | `rf_top11_avg_feature_importance.png`    | Visualization of the most important features    |
 
-```
 Optional debugging outputs (saved only if save_per_fold_analysis=true):
 
 - rf_full_model_importances.csv
