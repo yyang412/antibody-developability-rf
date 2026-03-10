@@ -45,17 +45,20 @@ This structured feature representation was introduced after exploratory analysis
 
 
 ## Training and Evaluation Strategy
-1. Cross-validation
+### 1. Cross-validation
 - Uses predefined folds from hierarchical_cluster_IgG_isotype_stratified_fold
 - Each fold is held out once as an external test set
 
-2. Model
-- RandomForestRegressor
-- n_estimators = 600
-- max_depth = 5
-- min_samples_leaf = 10
+### 2. Model
 
-2. Evaluation Metrics
+RandomForestRegressor with:
+
+- `n_estimators = 600`
+- `max_depth = 5`
+- `min_samples_leaf = 10`
+
+### 3. Evaluation Metrics
+
 - R² (train / test)
 - RMSE (train / test)
 - Spearman rank correlation on test folds
@@ -70,45 +73,107 @@ Rank-based evaluation is emphasized, reflecting the practical importance of rela
 - The top 11 most consistently important features are visualized and saved as:
 
 ```
-RF_top11_avg_feature_importance.png
+rf_top11_avg_feature_importance.png
 ```
 
 This analysis highlights stable, interpretable physicochemical drivers of hydrophobicity.
 
  ## Repository Structure
 ```
-├── feature_engineering/     # Feature construction (RF_utils.py)
-├── model/                   # Random Forest pipeline (RF_model.py)
-├── data/                    # Input CSV files (ignored by default)
-├── sandbox/                 # Exploratory notebooks and scratch work
-├── requirements.txt         # Python dependencies
+antibody-developability-rf/
+│
+├── configs/
+│   └── rf_baseline.yaml           # experiment configuration
+│
+├── features/
+│   └── rf_features.py             # sequence feature engineering
+│
+├── model/
+│   ├── rf_feature_sets.py         # Level1 / Level2 / Level3 feature groups
+│   ├── rf_pipeline.py             # RF training + fold split utilities
+│   ├── rf_evaluation.py           # evaluation, feature importance analysis
+│   └── run_rf.py                  # main experiment runner
+│
+├── results/                       # saved experiment outputs
+│
 └── README.md
 ```
 
-## Key Files
-1. feature_engineering/RF_utils.py
+# Configuration 
+Experiment settings are controlled through:
+```
+configs/rf_baseline.yaml
+```
+Example configuration:
 
-Feature engineering utilities converting raw antibody sequences into numerical descriptors.
+```yaml
+data:
+  sequences_csv: data/GDPa1_v1.2_sequences.csv
+  properties_csv: data/GDPa1_v1.2_20250814.csv
+  target_col: HIC
+  fold_col: hierarchical_cluster_IgG_isotype_stratified_fold
+  id_col: antibody_id
 
-2. model/RF_model.py
+model:
+  n_estimators: 600
+  max_depth: 5
+  min_samples_leaf: 10
+  random_state: 42
 
-End-to-end Random Forest pipeline:
-- feature generation
-- fold-based training and evaluation
-- performance metrics
-- feature importance analysis
+analysis:
+  top_n: 11
+  save_per_fold_analysis: false
+
+output:
+  results_dir: results
+```
+
+
+# Output Files
+The pipeline saves experiment outputs to:
+
+```
+results/
+```
+
+
+Primary results used for reporting:
+```
+| File                                     | Description                                     |
+| ---------------------------------------- | ----------------------------------------------- |
+| `rf_cv_summary.csv`                      | Cross-validated performance of baseline models  |
+| `rf_top11_cv_summary.csv`                | Performance of the top-N feature models         |
+| `rf_feature_importance_rank_summary.csv` | Average feature importance ranking across folds |
+| `rf_top11_avg_feature_importance.png`    | Visualization of the most important features    |
+
+```
+Optional debugging outputs (saved only if save_per_fold_analysis=true):
+
+- rf_full_model_importances.csv
+- rf_top11_metrics_per_fold.csv
+- rf_top11_spearman_per_fold.csv
+
+
 
 ## How to Run
 1. Environment setup
-From the project root
+From the project root:
 ```
 pip install -r requirements.txt
 ```
 
 2. Run the Random Forest model
 ```
-python -m model.RF_model
+python -m model.run_rf
 ```
+
+The pipeline performs the following steps:
+  1. Load configuration from configs/rf_baseline.yaml
+  2. Build sequence-derived features
+  3. Train Random Forest models across predefined folds
+  4. Evaluate performance using R² and Spearman correlation
+  5. Perform feature importance analysis
+  6. Retrain models using fold-specific top-N features
 
 ## Notes
 Model evaluation prioritizes robustness and ranking consistency over absolute error.

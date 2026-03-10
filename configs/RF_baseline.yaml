@@ -1,0 +1,19 @@
+data:
+  sequences_csv: data/GDPa1_v1.2_sequences.csv
+  properties_csv: data/GDPa1_v1.2_20250814.csv
+  target_col: HIC
+  fold_col: hierarchical_cluster_IgG_isotype_stratified_fold
+  id_col: antibody_id
+
+model:
+  n_estimators: 600
+  max_depth: 5
+  min_samples_leaf: 10
+  random_state: 42
+
+analysis:
+  top_n: 11
+  save_per_fold_analysis: false
+
+output:
+  results_dir: results
