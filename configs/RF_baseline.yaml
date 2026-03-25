@@ -16,4 +16,4 @@ analysis:
   save_per_fold_analysis: false
 
 output:
-  results_dir: results
+  results_dir: results/rf

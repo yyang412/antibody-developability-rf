@@ -1,0 +1,25 @@
+data:
+  sequences_csv: data/GDPa1_v1.2_sequences.csv
+  properties_csv: data/GDPa1_v1.2_20250814.csv
+  pdb_dir: data/pdb_files
+  target_col: HIC
+  fold_col: hierarchical_cluster_IgG_isotype_stratified_fold
+  id_col: antibody_id
+
+graph:
+  cutoff: 5.0
+
+model:
+  hidden_dim: 64
+  num_conv_layers: 3
+  dropout: 0.1
+
+training:
+  epochs: 100
+  batch_size: 16
+  lr: 0.001
+  weight_decay: 0.00001
+  random_state: 42
+
+output:
+  results_dir: results/gnn

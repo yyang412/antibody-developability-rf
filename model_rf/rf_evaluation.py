@@ -1,11 +1,8 @@
 import pandas as pd
 import matplotlib.pyplot as plt
 
-from model.rf_pipeline import (
-    split_by_fold,
-    train_rf_model_with_fold,
-    compute_spearman_with_fold,
-)
+from model_rf.rf_pipeline import train_rf_model_with_fold, compute_spearman_with_fold
+from utils.utils import split_by_fold
 
 
 def summarize_cv_results(metrics_df: pd.DataFrame, spearman_df: pd.DataFrame) -> pd.DataFrame:

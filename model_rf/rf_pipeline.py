@@ -4,29 +4,7 @@ from scipy.stats import spearmanr
 from sklearn.ensemble import RandomForestRegressor
 from sklearn.metrics import r2_score, mean_squared_error
 
-from model.rf_feature_sets import existing_cols
-
-
-def split_by_fold(
-    df,
-    fold_col: str = "hierarchical_cluster_IgG_isotype_stratified_fold",
-    fold=0,
-):
-    """
-    Split the dataframe into train and test partitions using a predefined fold column.
-    """
-    if fold_col not in df.columns:
-        raise ValueError(
-            f"{fold_col} not found in dataframe. "
-            "Make sure the fold assignment column is included."
-        )
-
-    test_mask = df[fold_col] == fold
-    test_df = df[test_mask].copy()
-    train_df = df[~test_mask].copy()
-
-    return train_df, test_df
-
+from model_rf.rf_feature_sets import existing_cols
 
 def train_rf_model_with_fold(
     train_df,

@@ -3,19 +3,19 @@ import yaml
 from pathlib import Path
 
 from features.rf_features import create_features_from_raw_df
-from model.rf_feature_sets import get_feature_sets
-from model.rf_pipeline import (
-    split_by_fold,
+from model_rf.rf_feature_sets import get_feature_sets
+from model_rf.rf_pipeline import (
     train_rf_model_with_fold,
     compute_spearman_with_fold,
 )
-from model.rf_evaluation import (
+from model_rf.rf_evaluation import (
     summarize_cv_results,
     collect_full_model_importances,
     run_fold_specific_top_n_analysis,
     summarize_feature_importance_ranks,
     plot_top_feature_importances,
 )
+from utils.utils import split_by_fold
 
 
 def main():
