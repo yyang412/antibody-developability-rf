@@ -1,4 +1,4 @@
-# Antibody Developability Prediction: <br>RF (Feature-Based) vs GNN (Structure-Aware Models)
+# Antibody Developability Prediction: RF vs GNN
 This repository contains two complementary modeling approaches for predicting antibody hydrophobicity (HIC):
 
 - Random Forest (RF) based on engineered physicochemical features
