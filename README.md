@@ -1,4 +1,4 @@
-# Antibody Developability Prediction: RF (Feature-Based) vs GNN (Structure-Aware Models)
+# Antibody Developability Prediction: <br>RF (Feature-Based) vs GNN (Structure-Aware Models)
 This repository contains two complementary modeling approaches for predicting antibody hydrophobicity (HIC):
 
 - Random Forest (RF) based on engineered physicochemical features
@@ -28,7 +28,7 @@ By consolidating both RF and GNN within a single codebase, this repository enabl
 
 
 ## Random Forest (Feature-Based Approach)
-### Modeling Approach: RF
+### Modeling Approach
 The Random Forest model predicts HIC values using features derived from:
 - Global Fv sequence (VH + VL combined)
 - Individual VH and VL chains
@@ -37,7 +37,7 @@ The Random Forest model predicts HIC values using features derived from:
 Feature design is strongly focused on hydrophobicity-related physicochemical properties, including GRAVY, charge, aromaticity, amino-acid composition, and local hydrophobic clustering.
 
 
-### Feature Structure: RF
+### Feature Structure
 For the Random Forest model, features are organized hierarchically to support interpretability and systematic analysis:
 1. Level 1 — Global Fv features
 - Length, GRAVY, hydrophobic residue counts
@@ -56,7 +56,7 @@ For the Random Forest model, features are organized hierarchically to support in
 This structured feature representation was introduced after exploratory analysis showed that individual descriptors have weak linear correlation with HIC, motivating the use of non-linear models and hierarchical feature organization.
 
 
-### Training and Evaluation Strategy: RF
+### Training and Evaluation Strategy
 1. Cross-validation
 - Uses predefined folds from hierarchical_cluster_IgG_isotype_stratified_fold
 - Each fold is held out once as an external test set
@@ -78,7 +78,7 @@ RandomForestRegressor with:
 Rank-based evaluation is emphasized, reflecting the practical importance of relative developability ordering.
 
 
-### Feature Importance Analysis: RF
+### Feature Importance Analysis
 - Feature importances are extracted from full models (Levels 1 + 2 + 3)
 - Importances are computed per fold
 - Average rank and average importance are aggregated across folds
@@ -91,8 +91,7 @@ rf_top11_avg_feature_importance.png
 This analysis highlights stable, interpretable physicochemical drivers of hydrophobicity.
 
 ## Graph Neural Network (Structure-Based Approach)
-## Modeling Approach: GNN
-
+### Modeling Approach
 To complement the feature-based Random Forest model, a Graph Neural Network (GNN) is introduced to model residue-level structural interactions directly from 3D antibody structures. Unlike the Random Forest model, the GNN learns representations directly from structural graphs without relying on manually engineered features.
 
 ### Graph Construction
@@ -113,7 +112,7 @@ To complement the feature-based Random Forest model, a Graph Neural Network (GNN
 - global mean pooling
 - MLP regression head
 
-## Training and Evaluation Strategy: GNN
+### Training and Evaluation Strategy
 
 - Loss: Mean Squared Error (MSE)
 - Optimizer: Adam
@@ -153,10 +152,10 @@ antibody-developability-rf/
 │   └── run_gnn.py                # main entry point
 │
 ├── model_rf/
-│   ├── rf_feature_sets.py
-│   ├── rf_pipeline.py
-│   ├── rf_evaluation.py
-│   └── run_rf.py
+│   ├── rf_feature_sets.py        # hierarchical feature grouping (Level 1/2/3)
+│   ├── rf_pipeline.py            # training loop, cross-validation, and data handling
+│   ├── rf_evaluation.py          # evaluation metrics and feature importance analysis
+│   └── run_rf.py                 # main entry point for RF experiments
 │
 ├── results/
 │   ├── gnn/
@@ -176,16 +175,12 @@ antibody-developability-rf/
 └── README.md
 ```
 
-# Configuration 
-Experiment settings are controlled through:
-RF:
-```
-configs/rf_baseline.yaml
-```
-GNN:
-```
-configs/gnn_baseline.yaml
-```
+# Configuration
+
+Experiment settings are controlled through separate configuration files:
+
+- **RF**: `configs/rf_baseline.yaml`
+- **GNN**: `configs/gnn_baseline.yaml`
 
 
 
@@ -197,7 +192,7 @@ results/
 ```
 
 
-### Random Forest Outputs
+## RF Outputs
 | File                                     | Description                                     |
 | ---------------------------------------- | ----------------------------------------------- |
 | `rf_cv_summary.csv`                      | Cross-validated performance of baseline models  |
@@ -212,7 +207,7 @@ Optional debugging outputs (saved only if save_per_fold_analysis=true):
 - rf_top11_metrics_per_fold.csv
 - rf_top11_spearman_per_fold.csv
 
-### GNN Outputs
+## GNN Outputs
 | File                         | Description                              |
 |------------------------------|------------------------------------------|
 | `gnn_cv_summary.csv`         | Cross-validated performance summary      |
@@ -232,12 +227,12 @@ python -m model.run_rf
 ```
 
 The pipeline performs the following steps:
-  1. Load configuration from configs/rf_baseline.yaml
-  2. Build sequence-derived features
-  3. Train Random Forest models across predefined folds
-  4. Evaluate performance using R² and Spearman correlation
-  5. Perform feature importance analysis
-  6. Retrain models using fold-specific top-N features
+ - 1. Load configuration from configs/rf_baseline.yaml
+ - 2. Build sequence-derived features
+ - 3. Train Random Forest models across predefined folds
+ - 4. Evaluate performance using R² and Spearman correlation
+ - 5. Perform feature importance analysis
+ - 6. Retrain models using fold-specific top-N features
 
 
 3. Generate structures (required for GNN)
@@ -251,10 +246,10 @@ The pipeline performs the following steps:
 ```
 
 The GNN pipeline performs:
-1. Load configuration from configs/gnn_baseline.yaml
-2. Construct residue-level graphs from PDB structures
-3. Train GNN models across folds  
-4. Evaluate using Spearman correlation  
+ - 1. Load configuration from configs/gnn_baseline.yaml
+ - 2. Construct residue-level graphs from PDB structures
+ - 3. Train GNN models across folds  
+ - 4. Evaluate using Spearman correlation  
 
 
 ## Notes
